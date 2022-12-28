@@ -10,6 +10,7 @@ body {
   width: 100vw;
   height: 100vh;
   background-color: #ebbc9c;
+  overflow-x: hidden;
 }
 
 .container {
@@ -55,7 +56,27 @@ h2 {
 .list li p span {
   color: #9513db;
 }
+
 .list li img {
   width: 100%;
   object-fit: cover;
+}
+
+.pagination {
+  margin: 4rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.pagination button {
+  display: block;
+  font-size: 2rem;
+  width: 100%;
+  padding: 0.7rem 1.5rem;
+  background-color: #5491a1;
+  color: #9513db;
+  cursor: pointer;
+  outline: none;
+  border: none;
 }
