@@ -14,27 +14,31 @@ body {
 }
 
 .container {
-  margin: 2rem auto;
+  margin: 2rem auto 0;
+  width: 100%;
   max-width: 80rem;
+  /* height: 50vh; */
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
 }
 
 h2 {
   color: #5491a1;
-  font-size: 5rem;
+  font-size: 4rem;
   margin-bottom: 1.7rem;
 }
 
 .list {
+  /* height: 80vh; */
   padding: 0rem 2rem;
   display: grid;
   place-items: center;
+  justify-content: space-evenly;
   gap: 2rem;
   list-style: none;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .list li {
@@ -79,4 +83,8 @@ h2 {
   cursor: pointer;
   outline: none;
   border: none;
+}
+
+#current {
+  color: #fff;
 }
