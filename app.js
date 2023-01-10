@@ -4,14 +4,15 @@ const listEndpoint = `${baseUrl}list${key}`;
 const list = document.querySelector(".list");
 const prevBtn = document.querySelector("#prev");
 const nextBtn = document.querySelector("#next");
-const currBtn = document.querySelector("#current");
+const paginationNumbers = document.querySelector(".pagination-numbers");
 
 //pagination variables
-const itemsPerPage = 12;
-let currentPage = 1;
+const itemsPerPage = 150;
+let currentPage;
 
 //list of coins
 let coinList = [];
+let pageNumbers = false;
 
 const fetchData = async () => {
   const response = await fetch(listEndpoint);
@@ -49,31 +50,54 @@ const renderData = async (currentPage = 1) => {
       });
 
     list.innerHTML = listItem;
-    renderPaginationBtns();
   });
+
+  if (!pageNumbers) getPaginationNumbers(); //call only once
+  handlePaginationBtns();
 };
 
 function numOfPages() {
   return Math.ceil(coinList.length / itemsPerPage);
 }
 
-const renderPaginationBtns = () => {
+const handleArrowBtns = () => {
   if (currentPage === 1) {
-    prevBtn.style.display = "none";
+    prevBtn.classList.add("disabled");
   } else {
-    prevBtn.style.display = "block";
+    prevBtn.classList.remove("disabled");
   }
 
   if (currentPage === numOfPages()) {
-    nextBtn.style.display = "none";
+    nextBtn.classList.add("disabled");
   } else {
-    nextBtn.style.display = "block";
+    nextBtn.classList.remove("disabled");
   }
-
-  prevBtn.innerHTML = currentPage - 1;
-  currBtn.innerHTML = currentPage;
-  nextBtn.innerHTML = currentPage + 1;
 };
+
+function handlePaginationBtns() {
+  document.querySelectorAll(".pagination-number").forEach((btn) => {
+    const pageIndex = Number(btn.getAttribute("page-index"));
+    btn.addEventListener("click", () => {
+      setCurrentPage(pageIndex);
+      renderData(currentPage);
+    });
+  });
+}
+
+function renderPaginationButtons(index) {
+  const paginationBtn = document.createElement("button");
+  paginationBtn.innerHTML = index;
+  paginationBtn.classList.add("pagination-number");
+  paginationBtn.setAttribute("page-index", index);
+  paginationNumbers.appendChild(paginationBtn);
+}
+
+function getPaginationNumbers() {
+  pageNumbers = true;
+  for (let i = 1; i <= numOfPages(); i++) {
+    renderPaginationButtons(i);
+  }
+}
 
 const nextPage = () => {
   if (currentPage < numOfPages()) {
@@ -90,8 +114,27 @@ const prevPage = () => {
   renderData(currentPage);
 };
 
-renderData();
+function setCurrentPage(pageNum) {
+  currentPage = pageNum;
+  setActiveBtn();
+  handleArrowBtns();
+}
 
-nextBtn.addEventListener("click", nextPage);
+function setActiveBtn() {
+  document.querySelectorAll(".pagination-number").forEach((btn) => {
+    const pageIndex = Number(btn.getAttribute("page-index"));
+    btn.classList.remove("active");
+    if (pageIndex === currentPage) {
+      btn.classList.add("active");
+    }
+  });
+}
 
-prevBtn.addEventListener("click", prevPage);
+window.addEventListener("load", () => {
+  setCurrentPage(1);
+  renderData();
+
+  nextBtn.addEventListener("click", nextPage);
+
+  prevBtn.addEventListener("click", prevPage);
+});

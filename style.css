@@ -9,7 +9,7 @@
 body {
   width: 100vw;
   height: 100vh;
-  background-color: #ebbc9c;
+  background-color: #fff;
   overflow-x: hidden;
 }
 
@@ -17,10 +17,8 @@ body {
   margin: 2rem auto 0;
   width: 100%;
   max-width: 80rem;
-  /* height: 50vh; */
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   align-items: center;
 }
 
@@ -31,7 +29,6 @@ h2 {
 }
 
 .list {
-  /* height: 80vh; */
   padding: 0rem 2rem;
   display: grid;
   place-items: center;
@@ -73,6 +70,11 @@ h2 {
   gap: 2rem;
 }
 
+.pagination .pagination-numbers {
+  display: flex;
+  gap: 0.3rem;
+}
+
 .pagination button {
   display: block;
   font-size: 2rem;
@@ -83,8 +85,18 @@ h2 {
   cursor: pointer;
   outline: none;
   border: none;
+  transition: all 0.2s ease-in;
 }
 
-#current {
+.pagination button:hover {
   color: #fff;
+}
+
+.pagination .pagination-numbers .active {
+  color: #fff;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.7;
 }
