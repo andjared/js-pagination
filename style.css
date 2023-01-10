@@ -9,32 +9,36 @@
 body {
   width: 100vw;
   height: 100vh;
-  background-color: #ebbc9c;
+  background-color: #fff;
   overflow-x: hidden;
 }
 
 .container {
-  margin: 2rem auto;
+  margin: 0 auto;
+  padding: 2rem;
+  width: 100%;
   max-width: 80rem;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
 h2 {
   color: #5491a1;
-  font-size: 5rem;
-  margin-bottom: 1.7rem;
+  font-size: 4rem;
+  margin: 2rem;
 }
 
 .list {
   padding: 0rem 2rem;
   display: grid;
-  place-items: center;
+  justify-content: space-evenly;
   gap: 2rem;
   list-style: none;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
 }
 
 .list li {
@@ -69,6 +73,11 @@ h2 {
   gap: 2rem;
 }
 
+.pagination .pagination-numbers {
+  display: flex;
+  gap: 0.3rem;
+}
+
 .pagination button {
   display: block;
   font-size: 2rem;
@@ -79,4 +88,22 @@ h2 {
   cursor: pointer;
   outline: none;
   border: none;
+  transition: all 0.2s ease-in;
+}
+
+.pagination button:hover {
+  color: #fff;
+}
+
+.pagination .pagination-numbers .active {
+  color: #fff;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.pagination .pagination-numbers .hidden {
+  display: none;
 }

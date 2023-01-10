@@ -1,64 +1,119 @@
 const key = "?access_key=6e021c6d1457f08717ac75ec6f99e561";
 const baseUrl = ` http://api.coinlayer.com/`;
-const listUrl = `${baseUrl}list${key}`;
+const listEndpoint = `${baseUrl}list${key}`;
 const list = document.querySelector(".list");
+const prevBtn = document.querySelector("#prev");
+const nextBtn = document.querySelector("#next");
+const paginationNumbers = document.querySelector(".pagination-numbers");
 
 //pagination variables
 const itemsPerPage = 8;
-let numOfPages;
-let currentPage = 1;
+let currentPage;
 
-//data variables
+//list of coins
 let coinList = [];
+let pageNumbers = false;
 
-const getData = async () => {
-  const response = await fetch(listUrl);
-  const data = response.json();
-  return data;
-};
+const fetchData = async () => {
+  const response = await fetch(listEndpoint);
+  const data = await response.json();
+  const coins = data.crypto;
+  const dataAsArray = Object.keys(coins);
 
-const renderData = async (currentPage = 1) => {
-  await getData().then((data) => {
-    const coins = data.crypto;
-    const dataAsArray = Object.keys(coins);
-
+  if (!coinList.length)
     for (let key in dataAsArray) {
       let val = dataAsArray[key];
       coinList.push(coins[val]);
     }
 
-    //html template
+  return coinList;
+};
+
+const renderData = async (currentPage = 1) => {
+  await fetchData().then((data) => {
     let listItem = "";
-    coinList
+    data
       .filter((item, index) => {
         let start = (currentPage - 1) * itemsPerPage;
         let end = currentPage * itemsPerPage;
         if (index >= start && index < end) {
-          console.log(index);
           return true;
         }
       })
       .forEach((coin) => {
         const { name, symbol, icon_url } = coin;
-        listItem += `<li>`;
-        listItem += `<img src=${icon_url} alt=${name} />`;
-        listItem += `<h3>${name}</h3>`;
-        listItem += `<p>Coin symbol: <span>${symbol}</span> </p>`;
-        listItem += `</li>`;
+        listItem += `<li>
+            <img src=${icon_url} alt=${name} />
+            <h3>${name}</h3>
+            <p>Coin symbol: <span>${symbol}</span> </p>        
+        </li>`;
       });
+
     list.innerHTML = listItem;
   });
+
+  if (!pageNumbers) getPaginationNumbers(); //call only once
+  handlePaginationBtns();
 };
 
 function numOfPages() {
   return Math.ceil(coinList.length / itemsPerPage);
 }
 
+const handleArrowBtns = (curr) => {
+  if (curr === 1) {
+    prevBtn.classList.add("disabled");
+  } else {
+    prevBtn.classList.remove("disabled");
+  }
+
+  if (curr === numOfPages()) {
+    nextBtn.classList.add("disabled");
+  } else {
+    nextBtn.classList.remove("disabled");
+  }
+};
+
+//set current page on pagination number click
+function handlePaginationBtns() {
+  document.querySelectorAll(".pagination-number").forEach((btn) => {
+    const pageIndex = Number(btn.getAttribute("page-index"));
+    const prevRange = currentPage - 2;
+    const nextRange = currentPage + 2;
+
+    if (pageIndex < prevRange || pageIndex > nextRange) {
+      btn.classList.add("hidden");
+    } else {
+      btn.classList.remove("hidden");
+    }
+
+    btn.addEventListener("click", () => {
+      setCurrentPage(pageIndex);
+      renderData(currentPage);
+    });
+  });
+}
+
+function renderPaginationButtons(index) {
+  const paginationBtn = document.createElement("button");
+  paginationBtn.innerHTML = index;
+  paginationBtn.classList.add("pagination-number");
+  paginationBtn.setAttribute("page-index", index);
+  paginationNumbers.appendChild(paginationBtn);
+}
+
+function getPaginationNumbers() {
+  pageNumbers = true;
+  for (let i = 1; i <= numOfPages(); i++) {
+    renderPaginationButtons(i);
+  }
+}
+
 const nextPage = () => {
   if (currentPage < numOfPages()) {
     currentPage++;
   }
-  // console.log(currentPage);
+
   renderData(currentPage);
 };
 
@@ -69,8 +124,27 @@ const prevPage = () => {
   renderData(currentPage);
 };
 
-renderData();
+function setCurrentPage(pageNum) {
+  currentPage = pageNum;
+  setActiveBtn();
+  handleArrowBtns(currentPage);
+}
 
-document.querySelector(".next").addEventListener("click", nextPage);
+function setActiveBtn() {
+  document.querySelectorAll(".pagination-number").forEach((btn) => {
+    const pageIndex = Number(btn.getAttribute("page-index"));
+    btn.classList.remove("active");
+    if (pageIndex === currentPage) {
+      btn.classList.add("active");
+    }
+  });
+}
 
-document.querySelector(".prev").addEventListener("click", prevPage);
+window.addEventListener("load", () => {
+  setCurrentPage(1);
+  renderData();
+
+  nextBtn.addEventListener("click", nextPage);
+
+  prevBtn.addEventListener("click", prevPage);
+});
