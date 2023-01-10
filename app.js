@@ -54,6 +54,7 @@ const renderData = async (currentPage = 1) => {
 
   if (!pageNumbers) getPaginationNumbers(); //call only once
   handlePaginationBtns();
+  setActiveBtn();
 };
 
 function numOfPages() {
