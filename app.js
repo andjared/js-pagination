@@ -7,7 +7,7 @@ const nextBtn = document.querySelector("#next");
 const paginationNumbers = document.querySelector(".pagination-numbers");
 
 //pagination variables
-const itemsPerPage = 150;
+const itemsPerPage = 8;
 let currentPage;
 
 //list of coins
@@ -60,23 +60,33 @@ function numOfPages() {
   return Math.ceil(coinList.length / itemsPerPage);
 }
 
-const handleArrowBtns = () => {
-  if (currentPage === 1) {
+const handleArrowBtns = (curr) => {
+  if (curr === 1) {
     prevBtn.classList.add("disabled");
   } else {
     prevBtn.classList.remove("disabled");
   }
 
-  if (currentPage === numOfPages()) {
+  if (curr === numOfPages()) {
     nextBtn.classList.add("disabled");
   } else {
     nextBtn.classList.remove("disabled");
   }
 };
 
+//set current page on pagination number click
 function handlePaginationBtns() {
   document.querySelectorAll(".pagination-number").forEach((btn) => {
     const pageIndex = Number(btn.getAttribute("page-index"));
+    const prevRange = currentPage - 2;
+    const nextRange = currentPage + 2;
+
+    if (pageIndex < prevRange || pageIndex > nextRange) {
+      btn.classList.add("hidden");
+    } else {
+      btn.classList.remove("hidden");
+    }
+
     btn.addEventListener("click", () => {
       setCurrentPage(pageIndex);
       renderData(currentPage);
@@ -117,7 +127,7 @@ const prevPage = () => {
 function setCurrentPage(pageNum) {
   currentPage = pageNum;
   setActiveBtn();
-  handleArrowBtns();
+  handleArrowBtns(currentPage);
 }
 
 function setActiveBtn() {

@@ -14,28 +14,31 @@ body {
 }
 
 .container {
-  margin: 2rem auto 0;
+  margin: 0 auto;
+  padding: 2rem;
   width: 100%;
   max-width: 80rem;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 h2 {
   color: #5491a1;
   font-size: 4rem;
-  margin-bottom: 1.7rem;
+  margin: 2rem;
 }
 
 .list {
   padding: 0rem 2rem;
   display: grid;
-  place-items: center;
   justify-content: space-evenly;
   gap: 2rem;
   list-style: none;
   grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
 }
 
 .list li {
@@ -99,4 +102,8 @@ h2 {
 .disabled {
   pointer-events: none;
   opacity: 0.7;
+}
+
+.pagination .pagination-numbers .hidden {
+  display: none;
 }
